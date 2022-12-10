@@ -1,0 +1,49 @@
+import SwiftUI
+
+func evaluate(_ expression: Expression) -> Double {
+    switch expression {
+    case let .Value(value):
+        return value
+    case let .Parenthesis(_):
+        fatalError("Unexpected parenthesis")
+    case let .Subexpression(subexpressions):
+        return evaluate(subexpressions.first!)
+    case let .Operator(operation, left, right):
+        let leftValue = evaluate(left)
+        let rightValue = evaluate(right)
+        switch operation {
+        case .addition:
+            return leftValue + rightValue
+        case .subtraction:
+            return leftValue - rightValue
+        case .multiplication:
+            return leftValue * rightValue
+        case .division:
+            return leftValue / rightValue
+        }
+    case let .Sine(value):
+        return sin(evaluate(value))
+    case let .Cosine(value):
+        return cos(evaluate(value))
+    case let .Tangent(value):
+        return tan(evaluate(value))
+    case let .ArcSine(value):
+        return asin(evaluate(value))
+    case let .ArcCosine(value):
+        return acos(evaluate(value))
+    case let .ArcTangent(value):
+        return atan(evaluate(value))
+    case let .HyperbolicSine(value):
+        return sinh(evaluate(value))
+    case let .HyperbolicCosine(value):
+        return cosh(evaluate(value))
+    case let .HyperbolicTangent(value):
+        return tanh(evaluate(value))
+    case let .Exponentiation(base, exponent):
+        return pow(evaluate(base), evaluate(exponent))
+    case let .Logarithm(base, argument):
+        let baseValue = evaluate(base)
+        let argumentValue = evaluate(argument)
+        return log(argumentValue) / log(baseValue)
+    // etc.
+	}
