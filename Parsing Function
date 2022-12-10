@@ -1,0 +1,62 @@
+import Regex
+import SwiftUI
+
+func parseExpression(from string: String) -> Expression {
+    let regex = try! Regex(pattern: "[0-9]+|[+\\-*/^()]|sin|cos|tan|asin|acos|atan|sinh|cosh|tanh|E")
+    let matches = regex.matches(in: string)
+    let tokens = matches.map {
+        String(string[Range($0.range, in: string)!])
+    }
+
+    var stack: [Expression] = []
+
+    for token in tokens {
+        if token == "(" {
+            stack.append(Expression.Parenthesis(.left))
+        } else if token == ")" {
+            var subexpression: [Expression] = []
+            while case let .Parenthesis(.left) = stack.popLast()! {
+                subexpression.append(stack.popLast()!)
+      }
+	  stack.append(Expression.Subexpression(subexpression.reversed()))
+		    } else if let value = Double(exactly: token) {
+		        stack.append(Expression.Value(value))
+		    } else if token.hasPrefix("log") {
+		        let base = token.dropFirst(3)
+		    } else if token == "sin" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.Sine(value))
+		    } else if token == "cos" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.Cosine(value))
+		    } else if token == "tan" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.Tangent(value))
+		    } else if token == "asin" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.ArcSine(value))
+		    } else if token == "acos" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.ArcCosine(value))
+		    } else if token == "atan" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.ArcTangent(value))
+		    } else if token == "sinh" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.HyperbolicSine(value))
+		    } else if token == "cosh" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.HyperbolicCosine(value))
+		    } else if token == "tanh" {
+		        let value = stack.popLast()!
+		        stack.append(Expression.HyperbolicTangent(value))
+		    } else if token == "^" {
+		        let exponent = stack.popLast()!
+		        let base = stack.popLast()!
+		        stack.append(Expression.Exponentiation(base: base, exponent: exponent))
+		    }
+		    // etc.
+		}
+		
+		return stack.first!
+}
