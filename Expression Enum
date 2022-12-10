@@ -1,0 +1,32 @@
+import SwiftUI
+
+indirect enum Expression {
+    case Value(Double)
+    case Parenthesis(Direction)
+    case Subexpression([Expression])
+    case Operator(Operation, left: Expression, right: Expression)
+    case Sine(Expression)
+    case Cosine(Expression)
+    case Tangent(Expression)
+    case ArcSine(Expression)
+    case ArcCosine(Expression)
+    case ArcTangent(Expression)
+    case HyperbolicSine(Expression)
+    case HyperbolicCosine(Expression)
+    case HyperbolicTangent(Expression)
+    case Exponentiation(base: Expression, exponent: Expression)
+    case Logarithm(base: Expression, argument: Expression)
+    // etc.
+
+    enum Direction {
+        case left
+        case right
+    }
+
+    enum Operation {
+        case addition
+        case subtraction
+        case multiplication
+        case division
+    }
+}
